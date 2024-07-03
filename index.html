@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maquina de Turing-Fer y Lupita</title>
+    <style>
+        /* Estilos para el cuerpo de la página */
+        body {
+            font-family: 'Press Start 2P', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #AED6F1; /* Color Fondo */
+            color: #000000; /* Letras en color negro */
+        }
+
+        /* Estilos para el contenedor principal */
+        #container {
+            background-color: #5DADE2; /* Color Fondo */
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        /* Estilos para el título */
+        h1 {
+            color: #fff; /* Letras blancas */
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: Monaco, monospace; /* Fuente Monaco */
+        }
+
+        /* Estilos para los elementos de entrada */
+        textarea, input, button {
+            font-family: 'Press Start 2P', sans-serif;
+            font-size: 16px;
+            color: #000000; /* Letras color negro */
+            background-color: #A9DFBF; /* Color Fondo cuadro Botones*/
+            border: 1px solid #fff; /* Borde blanco */
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Estilos para los botones */
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* Estilos para el resultado */
+        #outputText {
+            color: #000000; /* Letras color negro*/
+            background-color: #A9DFBF; /* Color Fondo cuadro Resultado */
+            border: 1px solid #fff; /* Borde blanco */
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Estilos para el botón de borrar datos */
+        .clear-button {
+            display: block;
+            margin-top: 10px;
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor principal -->
+    <div id="container">
+        <!-- Título -->
+        <h1>Maquina de Turing</h1>
+        <!-- División para el área de entrada de texto -->
+        <div>
+            <!-- Textarea para ingresar el texto -->
+            <textarea id="inputText" placeholder="Ingresa el texto" rows="6"></textarea>
+        </div>
+        <!-- División para los botones de encriptar y desencriptar -->
+        <div>
+            <button onclick="encriptar()">Encriptar</button>
+            <button onclick="desencriptar()">Desencriptar</button>
+        </div>
+        <!-- Textarea para mostrar el resultado -->
+        <textarea id="outputText" placeholder="Resultado" readonly></textarea>
+        <!-- Botón para borrar los datos -->
+        <button class="clear-button" onclick="borrarDatos()">Borrar Datos</button>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script>
+        const clave = 3; // Clave fijada en 3
+
+        // Función para encriptar el texto ingresado
+        function encriptar() {
+            var texto = document.getElementById('inputText').value;
+            if (texto === '') {
+                alert("Ingresa un texto");
+                return;
+            }
+            var textoEncriptado = '';
+
+            for (var i = 0; i < texto.length; i++) {
+                var caracter = texto[i];
+                if (caracter.match(/[a-z]/i)) {
+                    var codigo = texto.charCodeAt(i);
+                    if (codigo >= 65 && codigo <= 90) {
+                        textoEncriptado += String.fromCharCode(((codigo - 65 + clave) % 26) + 65);
+                    } else if (codigo >= 97 && codigo <= 122) {
+                        textoEncriptado += String.fromCharCode(((codigo - 97 + clave) % 26) + 97);
+                    }
+                } else if (caracter.match(/[0-9]/)) {
+                    var numero = parseInt(caracter);
+                    textoEncriptado += (numero + clave) % 10;
+                } else {
+                    textoEncriptado += caracter;
+                }
+            }
+
+            document.getElementById('outputText').value = textoEncriptado;
+            alert("Texto encriptado");
+        }
+
+        // Función para desencriptar el texto ingresado
+        function desencriptar() {
+            var texto = document.getElementById('outputText').value; // Obtener el texto del área de resultado
+            if (texto === '') {
+                alert("Ingresa un texto");
+                return;
+            }
+            var textoDesencriptado = '';
+
+            for (var i = 0; i < texto.length; i++) {
+                var caracter = texto[i];
+                if (caracter.match(/[a-z]/i)) {
+                    var codigo = texto.charCodeAt(i);
+                    if (codigo >= 65 && codigo <= 90) {
+                        textoDesencriptado += String.fromCharCode(((codigo - 65 - clave + 26) % 26) + 65);
+                    } else if (codigo >= 97 && codigo <= 122) {
+                        textoDesencriptado += String.fromCharCode(((codigo - 97 - clave + 26) % 26) + 97);
+                    }
+                } else if (caracter.match(/[0-9]/)) {
+                    var numero = parseInt(caracter);
+                    textoDesencriptado += (numero - clave + 10) % 10;
+                } else {
+                    textoDesencriptado += caracter;
+                }
+            }
+
+            document.getElementById('outputText').value = textoDesencriptado;
+            alert("Texto desencriptado");
+        }
+
+        // Función para borrar los datos ingresados
+        function borrarDatos() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+        }
+    </script>
+</body>
+</html>
